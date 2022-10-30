@@ -5,6 +5,7 @@ using UnityEngine;
 public class ParticleAuthoring : MonoBehaviour
 {
     public float3 InitialForce = float3.zero;
+    public bool Static = false;
 }
 
 public class ParticleBaker : Baker<ParticleAuthoring>
@@ -17,7 +18,8 @@ public class ParticleBaker : Baker<ParticleAuthoring>
             PreviousPosition = authoring.transform.position,
             ForceAccumulator = authoring.InitialForce,
             Mass = 1f,
-            Radius = authoring.transform.localScale.x / 2f
+            Radius = authoring.transform.localScale.x / 2f,
+            Static = authoring.Static
         });
     }
 }

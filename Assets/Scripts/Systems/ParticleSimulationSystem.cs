@@ -1,6 +1,7 @@
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
+using UnityEngine;
 
 partial struct ParticleSimulationSystem : ISystem
 {
@@ -21,6 +22,11 @@ partial struct ParticleSimulationSystem : ISystem
 
         foreach (var (transform, particle) in SystemAPI.Query<TransformAspect, RefRW<Particle>>())
         {
+            if (particle.ValueRO.Static)
+            {
+                continue;
+            }
+
             // Add unary forces
             particle.ValueRW.ForceAccumulator += particle.ValueRO.Mass * gravitationalAcceleration;
 
@@ -43,6 +49,36 @@ partial struct ParticleSimulationSystem : ISystem
             particle.ValueRW.ForceAccumulator = float3.zero; // Clear the force accumulator
 
             transform.Position = particle.ValueRO.Position;
+        }
+
+        // Satisfy Constraints
+        foreach (var constraint in SystemAPI.Query<Constraint>())
+        {
+            var particleA = SystemAPI.GetComponent<Particle>(constraint.ParticleA);
+            var particleB = SystemAPI.GetComponent<Particle>(constraint.ParticleB);
+
+            var aspectParticleA = SystemAPI.GetAspectRW<TransformAspect>(constraint.ParticleA);
+            var aspectParticleB = SystemAPI.GetAspectRW<TransformAspect>(constraint.ParticleB);
+
+            float3 deltaPosition = particleA.Position - particleB.Position;
+            float deltaLength = math.length(deltaPosition);
+            float diff = (deltaLength - constraint.RestLength) / deltaLength;
+
+            if (!particleA.Static)
+            {
+                particleA.Position -= deltaPosition * 0.5f * diff;
+                SystemAPI.SetComponent(constraint.ParticleA, particleA);
+                aspectParticleA.Position = particleA.Position;
+            }
+
+            if (!particleB.Static)
+            {
+                particleB.Position += deltaPosition * 0.5f * diff;
+                SystemAPI.SetComponent(constraint.ParticleB, particleB);
+                aspectParticleB.Position = particleB.Position;
+            }
+
+            Debug.DrawLine(particleA.Position, particleB.Position);
         }
     }
 }
