@@ -16,7 +16,8 @@ public class ParticleBaker : Baker<ParticleAuthoring>
             Position = authoring.transform.position,
             PreviousPosition = authoring.transform.position,
             ForceAccumulator = authoring.InitialForce,
-            Mass = 1f
+            Mass = 1f,
+            Radius = authoring.transform.localScale.x / 2f
         });
     }
 }
