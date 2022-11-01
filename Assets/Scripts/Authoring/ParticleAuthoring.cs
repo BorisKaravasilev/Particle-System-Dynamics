@@ -6,6 +6,7 @@ public class ParticleAuthoring : MonoBehaviour
 {
     public float3 InitialForce = float3.zero;
     public bool Static = false;
+    public bool IsHinge = false;
 }
 
 public class ParticleBaker : Baker<ParticleAuthoring>
@@ -21,5 +22,10 @@ public class ParticleBaker : Baker<ParticleAuthoring>
             Radius = authoring.transform.localScale.x / 2f,
             Static = authoring.Static
         });
+
+        if (authoring.IsHinge)
+        {
+            AddComponent<Hinge>();
+        }
     }
 }
