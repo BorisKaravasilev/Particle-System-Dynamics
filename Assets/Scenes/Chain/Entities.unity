@@ -406,6 +406,7 @@ MonoBehaviour:
     x: 0
     y: 0
     z: 0
+  Mass: 1
   Static: 0
 --- !u!23 &333579795
 MeshRenderer:
@@ -659,6 +660,7 @@ MonoBehaviour:
     x: 0
     y: 0
     z: 0
+  Mass: 1
   Static: 0
 --- !u!23 &853365542
 MeshRenderer:
@@ -760,6 +762,7 @@ MonoBehaviour:
     x: 0
     y: 0
     z: 0
+  Mass: 1
   Static: 1
 --- !u!23 &1057697508
 MeshRenderer:
@@ -861,6 +864,7 @@ MonoBehaviour:
     x: 0
     y: 0
     z: 0
+  Mass: 1
   Static: 0
 --- !u!23 &1197084205
 MeshRenderer:

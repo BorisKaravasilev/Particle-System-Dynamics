@@ -221,6 +221,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <InitialForce>k__BackingField: {x: 0, y: 0, z: 0}
   <Static>k__BackingField: 0
+  <Mass>k__BackingField: 1
 --- !u!1 &94723221
 GameObject:
   m_ObjectHideFlags: 0
@@ -319,6 +320,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <InitialForce>k__BackingField: {x: 0, y: 0, z: 0}
   <Static>k__BackingField: 1
+  <Mass>k__BackingField: 1
 --- !u!1 &257761910
 GameObject:
   m_ObjectHideFlags: 0
@@ -363,6 +365,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f42fd2f99ef1e74cbde2c46632be2ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <RelaxationIterations>k__BackingField: 1
 --- !u!1 &323439851
 GameObject:
   m_ObjectHideFlags: 0
@@ -1188,6 +1191,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <InitialForce>k__BackingField: {x: 0, y: 0, z: 0}
   <Static>k__BackingField: 0
+  <Mass>k__BackingField: 1
 --- !u!1 &1901363065
 GameObject:
   m_ObjectHideFlags: 0
@@ -1404,6 +1408,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <InitialForce>k__BackingField: {x: 0, y: 0, z: 0}
   <Static>k__BackingField: 0
+  <Mass>k__BackingField: 1
 --- !u!1 &2108096053
 GameObject:
   m_ObjectHideFlags: 0

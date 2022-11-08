@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class ParticleSimulationOOP : MonoBehaviour
 {
+    [field: SerializeField]
+    public int RelaxationIterations { get; set; } = 1;
+
     Vector3 gravitationalAcceleration = new Vector3(0f, -9.81f, 0f);
     ParticleOOP[] particles;
     ConstraintOOP[] constraints;
@@ -18,10 +21,10 @@ public class ParticleSimulationOOP : MonoBehaviour
     {
         foreach (var particle in particles)
         {
-            if (particle.Static) continue;
+            if (particle.Static) continue; // Early out if particle is static
 
             // Add unary forces
-            particle.ForceAccumulator += particle.Mass * gravitationalAcceleration;
+            particle.ForceAccumulator += particle.Mass * gravitationalAcceleration;  // Add gravitational force
 
             Vector3 acceleration = particle.ForceAccumulator / particle.Mass;
             Vector3 tempPosition = particle.Position;
@@ -29,9 +32,14 @@ public class ParticleSimulationOOP : MonoBehaviour
 
             // Verlet integration
             // x' = 2x - x* + a * dt^2
+            //
+            // x' - new position
+            // x  - current position
+            // x* - previous position
+            
             particle.Position = 2 * tempPosition - previousPosition + acceleration * Time.deltaTime * Time.deltaTime;
 
-            // Collisions and contact handling
+            // Collisions and contact handling (keep particles within a box)
             float particleRadius = particle.Radius;
             var minCorner = new Vector3(-10, 0, -10) + new Vector3(particleRadius, particleRadius, particleRadius);
             var maxCorner = new Vector3(10, 20, 10) - new Vector3(particleRadius, particleRadius, particleRadius);
@@ -39,34 +47,39 @@ public class ParticleSimulationOOP : MonoBehaviour
             particle.Position = math.clamp(particle.Position, minCorner, maxCorner);
 
             particle.PreviousPosition = tempPosition;
-            particle.ForceAccumulator = float3.zero; // Clear the force accumulator
+            particle.ForceAccumulator = float3.zero;          // Clear the force accumulator
 
-            particle.transform.position = particle.Position;
+            particle.transform.position = particle.Position;  // Update the position
         }
 
         // Satisfy Constraints
         foreach (var constraint in constraints)
         {
-            var particleA = constraint.ParticleA;
-            var particleB = constraint.ParticleB;
+            ParticleOOP particleA = constraint.ParticleA;
+            ParticleOOP particleB = constraint.ParticleB;
 
-            Vector3 deltaPosition = particleA.Position - particleB.Position;
-            float deltaLength = math.length(deltaPosition);
-            float diff = (deltaLength - constraint.RestLength) / deltaLength;
+            // ======================================================== Fixed distance constraint
 
-            if (!particleA.Static)
+            for (int i = 0; i < RelaxationIterations; i++)
             {
-                particleA.Position -= deltaPosition * 0.5f * diff;
-                particleA.transform.position = particleA.Position;
+                Vector3 deltaPosition = particleA.Position - particleB.Position;    // vector between the particles
+                float deltaLength = deltaPosition.magnitude;                        // distance between the particles
+                float diff = (deltaLength - constraint.RestLength) / deltaLength;   // ratio of how much of the distance has to be corrected
+
+                if (!particleA.Static)
+                {
+                    particleA.Position -= deltaPosition * 0.5f * diff;              // apply half of the correction to particleA
+                    particleA.transform.position = particleA.Position;
+                }
+
+                if (!particleB.Static)
+                {
+                    particleB.Position += deltaPosition * 0.5f * diff;              // apply the other half of the correction to particleB
+                    particleB.transform.position = particleB.Position;
+                }
             }
 
-            if (!particleB.Static)
-            {
-                particleB.Position += deltaPosition * 0.5f * diff;
-                particleB.transform.position = particleB.Position;
-            }
-
-            Debug.DrawLine(particleA.Position, particleB.Position);
+            Debug.DrawLine(particleA.Position, particleB.Position);                 // visualize the constraint
         }
     }
 }
