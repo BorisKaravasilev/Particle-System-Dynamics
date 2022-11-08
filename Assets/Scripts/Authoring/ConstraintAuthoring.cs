@@ -12,13 +12,18 @@ public class ConstraintBaker : Baker<ConstraintAuthoring>
 {
     public override void Bake(ConstraintAuthoring authoring)
     {
-        var diff = authoring.ParticleA.transform.position - authoring.ParticleB.transform.position;
+        float restLength = 5f;
+
+        if (authoring.ParticleA != null && authoring.ParticleB != null)
+        {
+            restLength = (authoring.ParticleA.transform.position - authoring.ParticleB.transform.position).magnitude;
+        }
 
         AddComponent(new Constraint
         {
-            ParticleA = GetEntity(authoring.ParticleA),
-            ParticleB = GetEntity(authoring.ParticleB),
-            RestLength = diff.magnitude
+            ParticleA = authoring.ParticleA == null ? Entity.Null : GetEntity(authoring.ParticleA),
+            ParticleB = authoring.ParticleB == null ? Entity.Null : GetEntity(authoring.ParticleB),
+            RestLength = restLength
         });
     }
 }
