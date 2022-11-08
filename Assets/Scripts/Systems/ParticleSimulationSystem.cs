@@ -5,11 +5,13 @@ using UnityEngine;
 
 partial struct ParticleSimulationSystem : ISystem
 {
-    int relaxation_iterations;
+    SimulationSettings simulation;
+    bool simulationCached;
 
     public void OnCreate(ref SystemState state)
     {
-        relaxation_iterations = 1;
+        simulationCached = false;
+        state.RequireForUpdate<SimulationSettings>();
     }
 
     public void OnDestroy(ref SystemState state)
@@ -19,6 +21,12 @@ partial struct ParticleSimulationSystem : ISystem
 
     public void OnUpdate(ref SystemState state)
     {
+        if (!simulationCached)
+        {
+            simulation = SystemAPI.GetSingleton<SimulationSettings>();
+            simulationCached = true;
+        }
+
         float deltaTime = SystemAPI.Time.DeltaTime;
         float3 gravitationalAcceleration = new float3(0f, -9.81f, 0f);
 
@@ -47,8 +55,8 @@ partial struct ParticleSimulationSystem : ISystem
 
             // Collisions and contact handling (keep particles within a box)
             float particleRadius = particle.ValueRO.Radius;
-            var minCorner = new float3(-10, 0, -10) + particleRadius;
-            var maxCorner = new float3(10, 20, 10) - particleRadius;
+            var minCorner = simulation.MinCorner + particleRadius;
+            var maxCorner = simulation.MaxCorner - particleRadius;
 
             particle.ValueRW.Position = math.clamp(particle.ValueRO.Position, minCorner, maxCorner);
 
@@ -71,7 +79,7 @@ partial struct ParticleSimulationSystem : ISystem
             // ======================================================== Fixed distance constraint
             
 
-            for (int i = 0; i < relaxation_iterations; i++)
+            for (int i = 0; i < simulation.RelaxationIterations; i++)
             {
                 float3 deltaPosition = particleA.Position - particleB.Position;     // vector between the particles
                 float deltaLength = math.length(deltaPosition);                     // distance between the particles
