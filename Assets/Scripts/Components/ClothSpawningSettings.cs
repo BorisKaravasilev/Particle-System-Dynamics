@@ -1,4 +1,5 @@
 using Unity.Entities;
+using Unity.Mathematics;
 
 struct ClothSpawningSettings : IComponentData
 {
@@ -6,4 +7,5 @@ struct ClothSpawningSettings : IComponentData
     public Entity ConstraintPrefab;
     public int Dimension;
     public float Spacing;
+    public float3 InitialImpulse;
 }

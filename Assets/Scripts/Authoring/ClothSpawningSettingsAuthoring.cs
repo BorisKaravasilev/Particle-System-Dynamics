@@ -8,6 +8,7 @@ public class ClothSpawningSettingsAuthoring : MonoBehaviour
     public GameObject ConstraintPrefab;
     public int Dimension;
     public float Spacing;
+    public float3 InitialImpulse;
 }
 
 public class ClothSpawningSettingsBaker : Baker<ClothSpawningSettingsAuthoring>
@@ -19,7 +20,8 @@ public class ClothSpawningSettingsBaker : Baker<ClothSpawningSettingsAuthoring>
             ParticlePrefab = GetEntity(authoring.ParticlePrefab),
             ConstraintPrefab = GetEntity(authoring.ConstraintPrefab),
             Dimension = authoring.Dimension,
-            Spacing = authoring.Spacing
+            Spacing = authoring.Spacing,
+            InitialImpulse = authoring.InitialImpulse,
         });
     }
 }

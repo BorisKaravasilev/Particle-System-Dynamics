@@ -209,8 +209,12 @@ MonoBehaviour:
     type: 3}
   ConstraintPrefab: {fileID: 4495901317699489372, guid: 6c3c4d5c4ae14274aac4b3e3f39b16d5,
     type: 3}
-  Dimension: 4
-  Spacing: 4
+  Dimension: 15
+  Spacing: 2
+  InitialImpulse:
+    x: 0
+    y: 0
+    z: 15
 --- !u!4 &1069598206
 Transform:
   m_ObjectHideFlags: 0

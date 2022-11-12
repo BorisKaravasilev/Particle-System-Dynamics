@@ -98,7 +98,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   InitialForce:
     x: 0
-    y: 0
+    y: 1000
     z: 0
   Mass: 1
   Static: 0
