@@ -2,8 +2,8 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
-using UnityEngine;
 
+[UpdateInGroup(typeof(InitializationSystemGroup))]
 partial struct ClothSpawningSystem : ISystem
 {
     public void OnCreate(ref SystemState state)
@@ -102,45 +102,6 @@ partial struct ClothSpawningSystem : ISystem
                 verticalConstraintIndex++;
             }
         }
-
-
-        ////for (int i = 0; i < settings.Dimension - 1; i++)
-        ////{
-        ////    for (int j = 0; j < settings.Dimension - 1; j++)
-        ////    {
-        ////        int constraint_index = j + i * (settings.Dimension - 1);
-
-        ////    }
-        ////}
-
-        //// Constraint initialization
-        //for (int i = 0; i < particleCount; i++)
-        //{
-        //    float x = i % settings.Dimension;
-        //    float y = i / settings.Dimension;
-
-        //    if (x != settings.Dimension - 1)
-        //    {
-        //        // Horizontal connection
-        //        ecb.SetComponent(constraints[i], new Constraint
-        //        {
-        //            ParticleA = particles[i],
-        //            ParticleB = particles[i + 1],
-        //            RestLength = settings.Spacing,
-        //        });
-        //    }
-
-        //    if (y != settings.Dimension - 1)
-        //    {
-        //        // Vertical connection
-        //        ecb.SetComponent(constraints[i + constraintCount / 2], new Constraint
-        //        {
-        //            ParticleA = particles[i],
-        //            ParticleB = particles[i + settings.Dimension],
-        //            RestLength = settings.Spacing,
-        //        });
-        //    }
-        //}
 
         state.Enabled = false; // Run only once
     }

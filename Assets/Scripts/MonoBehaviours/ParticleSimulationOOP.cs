@@ -5,6 +5,10 @@ public class ParticleSimulationOOP : MonoBehaviour
 {
     [field: SerializeField]
     public int RelaxationIterations { get; set; } = 1;
+    [field: SerializeField]
+    public Vector3 MinCorner { get; set; } = new Vector3(-100, -100, -100);
+    [field: SerializeField]
+    public Vector3 MaxCorner { get; set; } = new Vector3(100, 100, 100);
 
     Vector3 gravitationalAcceleration = new Vector3(0f, -9.81f, 0f);
     ParticleOOP[] particles;
@@ -13,12 +17,17 @@ public class ParticleSimulationOOP : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        particles = FindObjectsOfType<ParticleOOP>();
-        constraints = FindObjectsOfType<ConstraintOOP>();
+        
     }
 
     private void FixedUpdate()
     {
+        if (particles == null || constraints == null)
+        {
+            particles = FindObjectsOfType<ParticleOOP>();
+            constraints = FindObjectsOfType<ConstraintOOP>();
+        }
+
         foreach (var particle in particles)
         {
             if (particle.Static) continue; // Early out if particle is static
@@ -41,8 +50,8 @@ public class ParticleSimulationOOP : MonoBehaviour
 
             // Collisions and contact handling (keep particles within a box)
             float particleRadius = particle.Radius;
-            var minCorner = new Vector3(-10, 0, -10) + new Vector3(particleRadius, particleRadius, particleRadius);
-            var maxCorner = new Vector3(10, 20, 10) - new Vector3(particleRadius, particleRadius, particleRadius);
+            var minCorner = MinCorner + new Vector3(particleRadius, particleRadius, particleRadius);
+            var maxCorner = MaxCorner - new Vector3(particleRadius, particleRadius, particleRadius);
 
             particle.Position = math.clamp(particle.Position, minCorner, maxCorner);
 

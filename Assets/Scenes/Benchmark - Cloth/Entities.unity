@@ -156,11 +156,11 @@ MonoBehaviour:
   MinCorner:
     x: -100
     y: -100
-    z: -10
+    z: -100
   MaxCorner:
     x: 100
-    y: 20
-    z: 10
+    y: 100
+    z: 100
 --- !u!4 &634298337
 Transform:
   m_ObjectHideFlags: 0
