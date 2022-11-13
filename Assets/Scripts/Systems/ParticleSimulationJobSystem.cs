@@ -4,8 +4,8 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 
-[BurstCompile]
-partial struct ParticleSimulationSystem : ISystem
+[BurstCompile, DisableAutoCreation]
+partial struct ParticleSimulationJobSystem : ISystem
 {
     SimulationSettings simulation;
     bool simulationCached;
@@ -106,6 +106,89 @@ partial struct ParticleSimulationSystem : ISystem
             }
 
             Debug.DrawLine(particleA.Position, particleB.Position);                 // visualize the constraint
+        }
+    }
+
+    [BurstCompile]
+    partial struct SimulationJob : IJobEntity
+    {
+        public float deltaTime;
+        public float3 gravitationalAcceleration;
+
+        void Execute()
+        {
+            //foreach (var (transform, particle) in SystemAPI.Query<TransformAspect, RefRW<Particle>>())
+            //{
+            //    if (particle.ValueRO.Static)
+            //    {
+            //        continue; // Early out if particle is static
+            //    }
+
+            //    // Add unary forces
+            //    particle.ValueRW.ForceAccumulator += particle.ValueRO.Mass * gravitationalAcceleration; // Add gravitational force
+
+            //    float3 acceleration = particle.ValueRO.ForceAccumulator / particle.ValueRO.Mass;
+            //    float3 tempPosition = particle.ValueRO.Position;
+            //    float3 previousPosition = particle.ValueRO.PreviousPosition;
+
+            //    // Verlet integration
+            //    // x' = 2x - x* + a * dt^2
+            //    //
+            //    // x' - new position
+            //    // x  - current position
+            //    // x* - previous position
+
+            //    particle.ValueRW.Position = 2 * tempPosition - previousPosition + acceleration * deltaTime * deltaTime;
+
+            //    // Collisions and contact handling (keep particles within a box)
+            //    float particleRadius = particle.ValueRO.Radius;
+            //    var minCorner = simulation.MinCorner + particleRadius;
+            //    var maxCorner = simulation.MaxCorner - particleRadius;
+
+            //    particle.ValueRW.Position = math.clamp(particle.ValueRO.Position, minCorner, maxCorner);
+
+            //    particle.ValueRW.PreviousPosition = tempPosition;
+            //    particle.ValueRW.ForceAccumulator = float3.zero; // Clear the force accumulator
+
+            //    transform.Position = particle.ValueRO.Position;  // Update the position
+            //}
+
+            //// Satisfy Constraints (through relaxation)
+            //foreach (var constraint in SystemAPI.Query<Constraint>())
+            //{
+            //    var particleA = SystemAPI.GetComponent<Particle>(constraint.ParticleA);
+            //    var particleB = SystemAPI.GetComponent<Particle>(constraint.ParticleB);
+
+            //    var aspectParticleA = SystemAPI.GetAspectRW<TransformAspect>(constraint.ParticleA);
+            //    var aspectParticleB = SystemAPI.GetAspectRW<TransformAspect>(constraint.ParticleB);
+
+
+            //    // ======================================================== Fixed distance constraint
+
+
+            //    for (int i = 0; i < simulation.RelaxationIterations; i++)
+            //    {
+            //        float3 deltaPosition = particleA.Position - particleB.Position;     // vector between the particles
+            //        float deltaLength = math.length(deltaPosition);                     // distance between the particles
+            //        float diff = (deltaLength - constraint.RestLength) / deltaLength;   // ratio of how much of the distance has to be corrected
+
+            //        if (!particleA.Static)
+            //        {
+            //            particleA.Position -= deltaPosition * 0.5f * diff;              // apply half of the correction to particleA
+            //            SystemAPI.SetComponent(constraint.ParticleA, particleA);
+            //            aspectParticleA.Position = particleA.Position;
+            //        }
+
+            //        if (!particleB.Static)
+            //        {
+            //            particleB.Position += deltaPosition * 0.5f * diff;              // apply the other half of the correction to particleB
+            //            SystemAPI.SetComponent(constraint.ParticleB, particleB);
+            //            aspectParticleB.Position = particleB.Position;
+            //        }
+            //    }
+
+            //    Debug.DrawLine(particleA.Position, particleB.Position);                 // visualize the constraint
+            //}
         }
     }
 }
