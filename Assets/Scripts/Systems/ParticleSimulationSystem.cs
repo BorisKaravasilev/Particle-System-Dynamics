@@ -2,7 +2,6 @@ using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
-using UnityEngine;
 
 [UpdateInGroup(typeof(FixedStepSimulationSystemGroup)), BurstCompile]
 partial struct ParticleSimulationSystem : ISystem
@@ -80,8 +79,6 @@ partial struct ParticleSimulationSystem : ISystem
             var particleA = SystemAPI.GetComponent<Particle>(constraint.ParticleA);
             var particleB = SystemAPI.GetComponent<Particle>(constraint.ParticleB);
 
-            //var particleAPosition = SystemAPI.GetComponent<LocalToWorld>(constraint.ParticleA);
-            //var particleBPosition = SystemAPI.GetComponent<LocalToWorld>(constraint.ParticleB);
             var aspectParticleA = SystemAPI.GetAspectRW<TransformAspect>(constraint.ParticleA);
             var aspectParticleB = SystemAPI.GetAspectRW<TransformAspect>(constraint.ParticleB);
 
@@ -100,8 +97,6 @@ partial struct ParticleSimulationSystem : ISystem
                     particleA.Position -= deltaPosition * 0.5f * diff;              // apply half of the correction to particleA
                     SystemAPI.SetComponent(constraint.ParticleA, particleA);
                     aspectParticleA.Position = particleA.Position;
-                    //particleAPosition.Position = particleA.Position;
-                    //SystemAPI.SetComponent<LocalToWorld>(constraint.particleA, particleAPosition);
                 }
 
                 if (!particleB.Static)
@@ -111,8 +106,6 @@ partial struct ParticleSimulationSystem : ISystem
                     aspectParticleB.Position = particleB.Position;
                 }
             }
-
-            //Debug.DrawLine(particleA.Position, particleB.Position);                 // visualize the constraint
         }
     }
 }
