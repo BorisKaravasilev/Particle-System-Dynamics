@@ -7,7 +7,7 @@ public class ClothSpawnerOOP : MonoBehaviour
     public int Dimension;
     public float Spacing;
     public Vector3 InitialImpulse;
-
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -40,7 +40,7 @@ public class ClothSpawnerOOP : MonoBehaviour
             particle.ForceAccumulator = x * InitialImpulse;
             particle.Mass = 1f;
             particle.Radius = 1f;
-            particle.Static = y == 0 ? true : false;
+            particle.Static = y == 0;
         }
 
 

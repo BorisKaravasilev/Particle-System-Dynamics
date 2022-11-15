@@ -46,7 +46,7 @@ public class ParticleSimulationOOP : MonoBehaviour
             // x  - current position
             // x* - previous position
             
-            particle.Position = 2 * tempPosition - previousPosition + acceleration * Time.deltaTime * Time.deltaTime;
+            particle.Position = 2 * tempPosition - previousPosition + acceleration * (Time.fixedDeltaTime * Time.fixedDeltaTime);
 
             // Collisions and contact handling (keep particles within a box)
             float particleRadius = particle.Radius;
@@ -77,18 +77,16 @@ public class ParticleSimulationOOP : MonoBehaviour
 
                 if (!particleA.Static)
                 {
-                    particleA.Position -= deltaPosition * 0.5f * diff;              // apply half of the correction to particleA
+                    particleA.Position -= deltaPosition * (0.5f * diff);              // apply half of the correction to particleA
                     particleA.transform.position = particleA.Position;
                 }
 
                 if (!particleB.Static)
                 {
-                    particleB.Position += deltaPosition * 0.5f * diff;              // apply the other half of the correction to particleB
+                    particleB.Position += deltaPosition * (0.5f * diff);              // apply the other half of the correction to particleB
                     particleB.transform.position = particleB.Position;
                 }
             }
-
-            Debug.DrawLine(particleA.Position, particleB.Position);                 // visualize the constraint
         }
     }
 }
