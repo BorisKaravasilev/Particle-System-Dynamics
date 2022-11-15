@@ -4,7 +4,7 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 
-[BurstCompile]
+[UpdateInGroup(typeof(FixedStepSimulationSystemGroup)), BurstCompile]
 partial struct ParticleSimulationSystem : ISystem
 {
     SimulationSettings simulation;
@@ -59,11 +59,14 @@ partial struct ParticleSimulationSystem : ISystem
             particle.ValueRW.Position = 2 * tempPosition - previousPosition + acceleration * deltaTime * deltaTime;
 
             // Collisions and contact handling (keep particles within a box)
-            float particleRadius = particle.ValueRO.Radius;
-            var minCorner = simulation.MinCorner + particleRadius;
-            var maxCorner = simulation.MaxCorner - particleRadius;
+            if (simulation.EnableWalls)
+            {
+                float particleRadius = particle.ValueRO.Radius;
+                var minCorner = simulation.MinCorner + particleRadius;
+                var maxCorner = simulation.MaxCorner - particleRadius;
 
-            particle.ValueRW.Position = math.clamp(particle.ValueRO.Position, minCorner, maxCorner);
+                particle.ValueRW.Position = math.clamp(particle.ValueRO.Position, minCorner, maxCorner);
+            }
 
             particle.ValueRW.PreviousPosition = tempPosition;
             particle.ValueRW.ForceAccumulator = float3.zero; // Clear the force accumulator
@@ -77,12 +80,14 @@ partial struct ParticleSimulationSystem : ISystem
             var particleA = SystemAPI.GetComponent<Particle>(constraint.ParticleA);
             var particleB = SystemAPI.GetComponent<Particle>(constraint.ParticleB);
 
+            //var particleAPosition = SystemAPI.GetComponent<LocalToWorld>(constraint.ParticleA);
+            //var particleBPosition = SystemAPI.GetComponent<LocalToWorld>(constraint.ParticleB);
             var aspectParticleA = SystemAPI.GetAspectRW<TransformAspect>(constraint.ParticleA);
             var aspectParticleB = SystemAPI.GetAspectRW<TransformAspect>(constraint.ParticleB);
 
 
             // ======================================================== Fixed distance constraint
-            
+
 
             for (int i = 0; i < simulation.RelaxationIterations; i++)
             {
@@ -95,6 +100,8 @@ partial struct ParticleSimulationSystem : ISystem
                     particleA.Position -= deltaPosition * 0.5f * diff;              // apply half of the correction to particleA
                     SystemAPI.SetComponent(constraint.ParticleA, particleA);
                     aspectParticleA.Position = particleA.Position;
+                    //particleAPosition.Position = particleA.Position;
+                    //SystemAPI.SetComponent<LocalToWorld>(constraint.particleA, particleAPosition);
                 }
 
                 if (!particleB.Static)
@@ -105,7 +112,7 @@ partial struct ParticleSimulationSystem : ISystem
                 }
             }
 
-            Debug.DrawLine(particleA.Position, particleB.Position);                 // visualize the constraint
+            //Debug.DrawLine(particleA.Position, particleB.Position);                 // visualize the constraint
         }
     }
 }

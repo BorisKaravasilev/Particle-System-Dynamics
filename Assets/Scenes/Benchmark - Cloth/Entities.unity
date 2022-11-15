@@ -154,13 +154,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RelaxationIterations: 1
   MinCorner:
-    x: -100
-    y: -100
-    z: -100
+    x: -10000
+    y: -10000
+    z: -10000
   MaxCorner:
-    x: 100
-    y: 100
-    z: 100
+    x: 10000
+    y: 10000
+    z: 10000
+  EnableWalls: 0
 --- !u!4 &634298337
 Transform:
   m_ObjectHideFlags: 0
@@ -209,7 +210,7 @@ MonoBehaviour:
     type: 3}
   ConstraintPrefab: {fileID: 4495901317699489372, guid: 6c3c4d5c4ae14274aac4b3e3f39b16d5,
     type: 3}
-  Dimension: 15
+  Dimension: 30
   Spacing: 2
   InitialImpulse:
     x: 0

@@ -4,7 +4,7 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 
-[BurstCompile, DisableAutoCreation]
+[UpdateInGroup(typeof(FixedStepSimulationSystemGroup)), BurstCompile, DisableAutoCreation]
 partial struct ParticleSimulationJobSystem : ISystem
 {
     SimulationSettings simulation;
