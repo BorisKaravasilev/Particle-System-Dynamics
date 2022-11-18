@@ -44,7 +44,7 @@ public class ClothSpawnerOOP : MonoBehaviour
         }
 
 
-        // ================================================ Initialize constraint data
+        // ================================================ Instantiate constraints
 
         int horizontalConstraintIndex = 0;
         int verticalConstraintIndex = 0;
